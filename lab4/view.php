@@ -2,8 +2,18 @@
     
 namespace view;
 
+// no222bd - Added require_Once =====================================================================
+require_once('view/MasterView.php');
+
 class View{
-	
+		
+	// no222bd - Added private member referencing a MasterView ======================================
+	private $masterView;
+
+	public function __construct() {
+		$this->masterView = new \view\MasterView();
+	}
+
 	/**
 	 * @var int
 	 */
@@ -47,7 +57,7 @@ class View{
 	 * @var int
 	 */
 	const BOTH_WRONG = 8;
-	
+
 	/**
 	 * @var string
 	 */
@@ -276,51 +286,15 @@ class View{
 			}
 		}
 	
-	/**
-	 * @return string
-	 * retunerar grunden i vår HTML
-	 * som ska vara överst på sidan.
-	 */
-	private function basicHeader(){
-		
-		return "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'> 
-        <html  xmlns='http://www.w3.org/1999/xhtml'> 
-          <head> 
-             <title>Laboration 2</title> 
-             <meta http-equiv='content-type' content='text/html; charset=utf-8'/>
-          </head> 
-          <body>";
-	}
-	
-	/**
-	 * @return string
-	 * retunerar grunden i vår HTML
-	 * som ska vara nederst på sidan.
-	 * 
-	 * !!!NOTERA!!!
-	 * @var hour date + 2 är en åtgärd som är nödvändig på webbhotelets server.
-	 * Klockan fungerar korrekt utom timmar som visade två timmar för tidigt.
-	 * Och dagen som inte kan ta åäö.
-	 * Skulle webbhotel bytas eller testas localt kan denna åtgärd kanske tas bort.
-	 */
-	private function basicFooter(){
-			
-		$hour = date("H") + 2;
-		
-		$showDay = "<p> ".strftime('%A');
-		
-		$showCorrectDay = utf8_encode($showDay);
-		
-		return $showCorrectDay . strftime('den %d %B år %Y. Klockan är: ['. $hour .':%M:%S] ')."</p></body> </html>";
-	}
-	
+	// no222bd - Added link to register =======================================================================
 	/**
 	 * Visar loginsidan.
 	 */
 	public function showLoginPage(){
 		
-          echo  $this->basicHeader() .
-          "<h1>Laboration 2</h1><h2>Ej Inloggad</h2>
+          echo  $this->masterView->basicHeader() .
+          "<h1>Laboration 4</h1><h2>Ej Inloggad</h2>
+          <p><a href='?register'>Registrera</a></p>
 			<form action='?login' method='post' enctype='multipart/form-data'>
 				<fieldset>
 					<legend>Login - Skriv in användarnamn och lösenord</legend>
@@ -334,22 +308,22 @@ class View{
 					<input type='submit' name='".$this->loginButton."'  value='Logga in' />
 				</fieldset>
 			</form>"
-			 . $this->basicFooter(); 
+			 . $this->masterView->basicFooter(); 
 	}
 	
+	// no222bd - Added argument to method for dynamic username ===============================================
 	/**
 	 * Visar förstasidan när man är inloggad.
 	 */
-	public function showHomePage(){
+	public function showHomePage($username){
 		
-		echo $this->basicHeader() .   
-		"<h1>Laboration 2</h1>
-				<h2>Admin är inloggad</h2>
+		echo $this->masterView->basicHeader() .   
+		"<h1>Laboration 4</h1>
+				<h2>$username är inloggad</h2>
 				 	 <a href='?".$this->logout."'>Logga ut</a>"
 				 .$this->message
-				 . $this->basicFooter()
+				 . $this->masterView->basicFooter()
 				 ;
-		
 	}
 }
 ?>

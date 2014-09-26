@@ -2,18 +2,80 @@
     
 namespace model;
 
+// no222bd - Added requir_once to be able to create and compare user to existing users ====
+require_once('/model/UserListModel.php');
+require_once('/model/UserModel.php');
+
 class Model{
+
+	// no222bd - Saved name location in $_SESSION =========================================
+	private $currentUser = 'currentUser';
+
+	// no222bd - Get username from $_SESSION ==============================================
+	public function getCurrentUsername() {
+		return $_SESSION[$this->currentUser];
+	}
+
+	/*public function checkCredentials($username, $password) {
+		$userListObject = new \model\UserListModel();
+		$userList = $userListObject->getUserList();
+
+		foreach ($userList as $user) {
+			if($username == $user->getUsername() && $password == $user->getPassword()) {
+				$_SESSION[$this->currentUser] = $username;
+				return true;
+			}
+		}
+
+		return false;
+	}*/
+
+	// no222bd - Check if user enterd valid credentials ==================================
+	public function checkCredentials($username, $password) {
+		$userList = (new \model\UserListModel())->getUserList();
+		//var_dump($userList);
+		//die();
+		$user = new \model\UserModel($username, $password, false);
+
+		foreach($userList as $existingUser) {
+			if($user->equals($existingUser)) {
+				$_SESSION[$this->currentUser] = $username;
+				return true;
+			}
+		}
+
+		return false;
+	}
+	
+	// no222bd - Deleted code =============================================================
+	/*/**
+	* @var string
+	*/
+	//private $admin = "Admin";
 	
 	/**
 	* @var string
 	*/
-	private $admin = "Admin";
+	//private $password = "Password";
+
+	/**
+	 * @return string
+	 * retunerar det korrekta användarnamnet
+	 */
+	//public function getAdmin(){
+		
+	//	return $this->admin;
+	//}
 	
 	/**
-	* @var string
-	*/
-	private $password = "Password";
-	
+	 * @return string
+	 * retunerar det korrekta lösenordet.
+	 */
+	//public function getPassword(){
+		
+	//	return $this->password;
+	//}
+
 	/**
 	* @var string
 	*/
@@ -53,24 +115,6 @@ class Model{
 	 * @var string
 	 */
 	private $salt = "salt";
-	
-	/**
-	 * @return string
-	 * retunerar det korrekta användarnamnet
-	 */
-	public function getAdmin(){
-		
-		return $this->admin;
-	}
-	
-	/**
-	 * @return string
-	 * retunerar det korrekta lösenordet.
-	 */
-	public function getPassword(){
-		
-		return $this->password;
-	}
 	
 	/**
 	 * startar sessionen för inloggning.
@@ -122,6 +166,7 @@ class Model{
 				$_SESSION[$this->sessionController][$this->browser] = $_SERVER[$this->agent];
 				$_SESSION[$this->sessionController][$this->ip] = $_SERVER[$this->remote];
 			}
+
 			if($_SESSION[$this->sessionController][$this->browser] != $_SERVER[$this->agent]){
 				
 				$this->destroySession();

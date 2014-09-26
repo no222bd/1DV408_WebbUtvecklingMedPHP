@@ -1,0 +1,21 @@
+Testfall 1.1: Navigera till sidan och se datum
+===============================================================================
+	* Felaktig visning av tid. Då klocka är 01:00 visas [25:00:00].
+
+Testfall 2.5: W3C HTML Validering
+===============================================================================
+	* Validering godkänd fast 2 varningar
+		* Line 12, Column 18: reference to non-existent ID "UserNameID"
+		  <label for='UserNameID' >Användarnamn :</label>
+		* Line 14, Column 18: reference to non-existent ID "PasswordID"
+		  <label for='PasswordID' >Lösenord  :</label>
+
+Testfall 3.6 Motverka sessionsstölder
+===============================================================================
+	* Beroende på tolkning av krav. W1 är utloggad vid omladdning.
+
+
+
+Kommentarer till koden
+===============================================================================
+Modellen kommunicerar direkt med $_SERVER vilket enligt MVC bör göras av en vy.

@@ -16,9 +16,9 @@ class Controller{
 	 * Objekt av klassen Model.
 	 */
 	private $classModel;
-	
+
 	public function __construct(){
-		
+
 		$this->classView = new \view\View();
 		$this->classModel = new \model\Model();
 		
@@ -30,12 +30,13 @@ class Controller{
 	 * och avgör vad som ska visas.
 	 */
 	private function checkLogin(){
-		
+
 		$this->classModel->checkSession();
 		
 		if(!$this->classModel->isUserLoggedIn()){
 			$this->checkCookie();
 		}
+
 		$this->checkLogoutButton();
 		
 		if(!$this->classModel->isUserLoggedIn()){
@@ -92,9 +93,9 @@ class Controller{
 	private function tryToLogin(){
 		
 		if($this->classView->tryToLogin()){
-			
+
 			if($this->checkUserInput()){
-				
+
 				if($this->classView->getLoginBox()){
 					$this->classView->setMessage(\view\View::LOGGED_IN_AND_REMEMBER_YOU);
 					
@@ -117,12 +118,23 @@ class Controller{
 	 */
 	private function checkUserInput(){
 		
-		if($this->checkUserName() && $this->checkPassword()){
+		// no222bd - Deleted and Rewritten code ==================================================================
+		/*if($this->checkUserName() && $this->checkPassword()){
 			return true;
 		}
-		return false;
+		return false;*/
+
+		if($this->checkUserName() && $this->checkPassword()){
+
+			if($this->classModel->checkCredentials($this->classView->getUsername(), $this->classView->getPassword())) {
+		 		return true;
+		 	} else {
+				$this->classView->setMessage(\view\View::BOTH_WRONG);
+				return false;
+			}
+		}
 	}
-	
+
 	/**
 	 * @return bool
 	 * Kontrollerar användarnamnet som användaren matat in.
@@ -133,17 +145,21 @@ class Controller{
 			$this->classView->setMessage(\view\View::USERNAME_EMPTY);
 			return false;
 		}
+
 		if($this->classView->getUserName() !== $this->classView->getStripUserName()){
 			$this->classView->setMessage(\view\View::NO_TAGS);
 			return false;
 		}
-		if($this->classView->getStripUserName() == $this->classModel->getAdmin()){
+
+		// no222bd - Deleted code ============================================================
+		/*if($this->classView->getStripUserName() == $this->classModel->getAdmin()){
 			return true;
-		}
-		else{
+		} else {
 			$this->classView->setMessage(\view\View::BOTH_WRONG);
 			return false;
-		}
+		}*/
+
+		return true;
 	}
 	
 	/**
@@ -161,15 +177,16 @@ class Controller{
 			$this->classView->setMessage(\view\View::NO_TAGS);
 			return false;
 		}
-		if($this->classView->getStripPassword() == $this->classModel->getPassword()){
+
+		// no222bd - Deleted code ===========================================================
+		/*if($this->classView->getStripPassword() == $this->classModel->getPassword()){
 			return true;
 		}
 		else{
 			$this->classView->setMessage(\view\View::BOTH_WRONG);
 			return false;
-		}
+		}*/
 		return true;
-		
 	}
 	
 	/**
@@ -185,7 +202,7 @@ class Controller{
 	 */
 	private function showHomePage(){
 		
-		$this->classView->showHomePage();
+		$this->classView->showHomePage($this->classModel->getCurrentUsername());
 	}
 }
 ?>

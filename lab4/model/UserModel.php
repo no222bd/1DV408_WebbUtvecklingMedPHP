@@ -1,0 +1,41 @@
+<?php
+
+namespace model;
+
+class UserModel {
+	
+	private $username;
+	private $password;
+
+	public function __construct($username, $password, $validate = true ) {
+
+		if($validate) {
+			if(mb_strlen($username) < 3)
+				throw new \Exception('Användarnamnet har för få tecken. Minst 3 tecken');
+
+			if(mb_strlen($password) < 6)
+				throw new \Exception('Lösenorden har för få tecken. Minst 6 tecken');
+		}
+		
+		$this->username = $username;
+		$this->password = $password;
+	}
+
+	public function equals(\model\UserModel $otherUser) {
+		if($this->username !== $otherUser->username)
+			return false;
+
+		if($this->password !== $otherUser->password)
+			return false;
+
+		return true;
+	}
+
+	public function getUsername() {
+		return $this->username;
+	}
+
+	public function getPassword() {
+		return $this->password;
+	}
+}
