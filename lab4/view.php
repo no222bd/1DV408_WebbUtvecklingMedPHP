@@ -3,16 +3,16 @@
 namespace view;
 
 // no222bd - Added require_Once =====================================================================
-require_once('view/MasterView.php');
+//require_once('view/SharedView.php');
 
 class View{
 		
 	// no222bd - Added private member referencing a MasterView ======================================
-	private $masterView;
+	//private $masterView;
 
-	public function __construct() {
-		$this->masterView = new \view\MasterView();
-	}
+	//public function __construct() {
+	//	$this->masterView = new \view\MasterView();
+	//}
 
 	/**
 	 * @var int
@@ -292,7 +292,7 @@ class View{
 	 */
 	public function showLoginPage(){
 		
-          echo  $this->masterView->basicHeader() .
+          echo \view\SharedView::basicHeader() .
           "<h1>Laboration 4</h1><h2>Ej Inloggad</h2>
           <p><a href='?register'>Registrera</a></p>
 			<form action='?login' method='post' enctype='multipart/form-data'>
@@ -308,7 +308,7 @@ class View{
 					<input type='submit' name='".$this->loginButton."'  value='Logga in' />
 				</fieldset>
 			</form>"
-			 . $this->masterView->basicFooter(); 
+			 . \view\SharedView::basicFooter(); 
 	}
 	
 	// no222bd - Added argument to method for dynamic username ===============================================
@@ -317,12 +317,12 @@ class View{
 	 */
 	public function showHomePage($username){
 		
-		echo $this->masterView->basicHeader() .   
+		echo \view\SharedView::basicHeader() .   
 		"<h1>Laboration 4</h1>
 				<h2>$username är inloggad</h2>
 				 	 <a href='?".$this->logout."'>Logga ut</a>"
 				 .$this->message
-				 . $this->masterView->basicFooter()
+				 . \view\SharedView::basicFooter()
 				 ;
 	}
 }

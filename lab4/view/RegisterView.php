@@ -2,11 +2,11 @@
 
 namespace view;
 
-require_once('/view/MasterView.php');
+//require_once('/view/MasterView.php');
 
 class RegisterView {
 	
-	private $masterView;
+	//private $masterView;
 
 	private $username = 'username';
 	private $password = 'password';
@@ -16,9 +16,9 @@ class RegisterView {
 	private $registrationErrorMessage = array();
 
 
-	public function __construct() {
-		$this->masterView = new \view\MasterView();
-	}
+	//public function __construct() {
+	//	$this->masterView = new \view\MasterView();
+	//}
 
 	public function doRegister(){
 		return isset($_POST[$this->registerButton]);
@@ -48,7 +48,7 @@ class RegisterView {
 
 	public function getRegisterHTML() {
 		
-		$output = $this->masterView->basicHeader();
+		$output = \view\SharedView::basicHeader();
 			 
 		$output .= '
 			<h1>Laboration 4</h1>
@@ -82,7 +82,7 @@ class RegisterView {
 				</fieldset>
 			</form>';
 
-		$output .= $this->masterView->basicFooter(); 
+		$output .= \view\SharedView::basicFooter(); 
 		
 		echo $output;
 	}

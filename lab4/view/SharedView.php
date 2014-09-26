@@ -2,9 +2,9 @@
 
 namespace view;
 
-class MasterView {
+class SharedView {
 	// no222bd - Check to decide wich usecase to run ==============================================================
-	public function wantToRegister(){
+	public static function wantToRegister(){
 		return array_key_exists('register', $_GET);
 	}
 
@@ -13,7 +13,7 @@ class MasterView {
 	 * retunerar grunden i vår HTML
 	 * som ska vara överst på sidan.
 	 */
-	public function basicHeader(){
+	public static function basicHeader(){
 		
 		// no222bd - Moved and rewritten from view.php =============================================================
 
@@ -46,7 +46,7 @@ class MasterView {
 	 * Och dagen som inte kan ta åäö.
 	 * Skulle webbhotel bytas eller testas localt kan denna åtgärd kanske tas bort.
 	 */
-	public function basicFooter(){
+	public static function basicFooter(){
 			
 		// no222bd - Moved and rewritten from view.php =============================================================
 		
