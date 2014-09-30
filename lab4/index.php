@@ -1,6 +1,6 @@
 <?php
 
-require_once('/controller/MasterController.php');
+require_once('controller/MasterController.php');
 
 setlocale(LC_ALL, "sv_SE", "sv_SE.utf-8", "sv", "swedish");
 

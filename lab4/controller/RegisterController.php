@@ -2,8 +2,10 @@
 
 namespace controller;
 
-require_once('/model/RegisterModel.php');
-require_once('/view/RegisterView.php');
+require_once('model/RegisterModel.php');
+require_once('view/RegisterView.php');
+
+require_once('TooShortCredentialsException.php');
 
 class RegisterController {
 	
@@ -22,14 +24,21 @@ class RegisterController {
 			
 			// Get user input from the view and send it to the model
 			try {
-				$this->registerModel->createUser($this->registerView->getUsername(),
-												 $this->registerView->getPassword(),
-												 $this->registerView->getRepeatedPassword());
-			} catch(\Exception $e) {
+				if($this->registerModel->createUser($this->registerView->getUsername(), $this->registerView->getPassword(), $this->registerView->getRepeatedPassword())) {
+					\view\SharedView::saveNewUserName($this->registerView->getUsername());
+					\view\SharedView::activateSuccessMessage();
+
+					$this->registerView->getLoginPage();
+				}
+			} catch(\TooShortCredentialsException $e) {
+				$this->registerView->setRegistrationErrorMessage('Användarnamnet har för få tecken. Minst 3 tecken');
+				$this->registerView->setRegistrationErrorMessage('Lösenorden har för få tecken. Minst 6 tecken');
+			} catch (\Exception $e) {
 				$this->registerView->setRegistrationErrorMessage($e->getMessage());
 			}
 		}
-		//Generate output
+
+		//Generate output-HTML
 		$this->registerView->getRegisterHTML();
 	}
 }

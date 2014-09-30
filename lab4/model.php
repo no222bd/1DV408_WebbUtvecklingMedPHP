@@ -2,50 +2,14 @@
     
 namespace model;
 
-// no222bd - Added requir_once to be able to create and compare user to existing users ====
-require_once('/model/UserListModel.php');
-require_once('/model/UserModel.php');
+// no222bd - Added UserListModel and UserModel ===========================================
+require_once('model/UserListModel.php');
+require_once('model/UserModel.php');
 
 class Model{
 
 	// no222bd - Saved name location in $_SESSION =========================================
 	private $currentUser = 'currentUser';
-
-	// no222bd - Get username from $_SESSION ==============================================
-	public function getCurrentUsername() {
-		return $_SESSION[$this->currentUser];
-	}
-
-	/*public function checkCredentials($username, $password) {
-		$userListObject = new \model\UserListModel();
-		$userList = $userListObject->getUserList();
-
-		foreach ($userList as $user) {
-			if($username == $user->getUsername() && $password == $user->getPassword()) {
-				$_SESSION[$this->currentUser] = $username;
-				return true;
-			}
-		}
-
-		return false;
-	}*/
-
-	// no222bd - Check if user enterd valid credentials ==================================
-	public function checkCredentials($username, $password) {
-		$userList = (new \model\UserListModel())->getUserList();
-		//var_dump($userList);
-		//die();
-		$user = new \model\UserModel($username, $password, false);
-
-		foreach($userList as $existingUser) {
-			if($user->equals($existingUser)) {
-				$_SESSION[$this->currentUser] = $username;
-				return true;
-			}
-		}
-
-		return false;
-	}
 	
 	// no222bd - Deleted code =============================================================
 	/*/**
@@ -75,6 +39,11 @@ class Model{
 		
 	//	return $this->password;
 	//}
+
+	/**
+	 * @var string
+	 */
+	//private $salt = "salt";
 
 	/**
 	* @var string
@@ -111,11 +80,40 @@ class Model{
 	*/
 	private $cookiePass = "segopunsefgipuwegi";
 	
-	/**
-	 * @var string
-	 */
-	private $salt = "salt";
-	
+	// no222bd - Get username from $_SESSION ==============================================
+	public function getCurrentUsername() {
+		return $_SESSION[$this->currentUser];
+	}
+
+	// no222bd - Check if user entered valid credentials ==================================
+	public function checkCredentials($username, $password) {
+		$userList = (new \model\UserListModel())->getUserList();
+		$user = new \model\UserModel($username, $password, false);
+
+		foreach($userList as $existingUser) {
+			if($user->equals($existingUser)) {
+				$_SESSION[$this->currentUser] = $username;
+				//var_dump($_SESSION);die();
+				return true;
+			}
+		}
+
+		return false;
+	}
+	/*public function checkCredentials($username, $password) {
+		$userList = (new \model\UserListModel())->getUserList();
+		$user = new \model\UserModel($username, $password, false);
+
+		foreach($userList as $existingUser) {
+			if($user->hasSameUsername($existingUser)) {
+				$_SESSION[$this->currentUser] = $username;
+				return true;
+			}
+		}
+
+		return false;
+	}*/
+
 	/**
 	 * startar sessionen för inloggning.
 	 */

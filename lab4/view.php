@@ -2,17 +2,7 @@
     
 namespace view;
 
-// no222bd - Added require_Once =====================================================================
-//require_once('view/SharedView.php');
-
 class View{
-		
-	// no222bd - Added private member referencing a MasterView ======================================
-	//private $masterView;
-
-	//public function __construct() {
-	//	$this->masterView = new \view\MasterView();
-	//}
 
 	/**
 	 * @var int
@@ -98,6 +88,16 @@ class View{
 	 */
 	private $cookiePass = "cookiePass";
 	
+	// no222bd - Added funtions to retrieve username cookie =====================================
+	public function getUsernameCookie() {
+		return $_COOKIE[$this->cookieName];
+	}
+
+	// no222bd - Added funtions to retrieve password cookie =====================================
+	public function getPasswordCookie() {
+		return $_COOKIE[$this->cookiePass];
+	}
+
 	/**
 	 * @return string
 	 * retunerar det inmatade användarnamnet.
@@ -189,9 +189,9 @@ class View{
 	 * Skapar kakorna med namn, value och krypterar lösen.
 	 * Skapar även en textfil med kakornas tid.
 	 */
-	public function bakeCookie($userName, $password, $salt){
+	/*public function bakeCookie($userName, $password, $salt){
 		
-		$time = time() + 30;
+		$time = time() + 60;
 				
 		file_put_contents("cookieTime.txt", $time);
 				
@@ -200,6 +200,18 @@ class View{
 			
 		setcookie($this->cookiePass, $cryptPass, $time);
 		
+	}*/
+	// no222bd - Rewritten - Simple and ugly fix to handle cookietime for each user  ================
+	public function bakeCookie($username, $scrambledPassword){
+		
+		$filename = $username . '.txt';
+		
+		$time = time() + 60;
+				
+		file_put_contents($filename, $time);
+				
+		setcookie($this->cookieName, $username, $time);
+		setcookie($this->cookiePass, $scrambledPassword, $time);
 	}
 	
 	/**
@@ -207,7 +219,6 @@ class View{
 	 * Kontrollerar om kakorna existerar.
 	 */
 	public function cookieExist(){
-
 		if(isset($_COOKIE[$this->cookieName]) && (isset($_COOKIE[$this->cookiePass]))){
 			return true;
 		}
@@ -222,7 +233,9 @@ class View{
 	 * Kontrollerar kakornas tid med textfilen.
 	 * Kontrollerar sedan om namn och lösen stämmer.
 	 */
-	public function checkCookie($userName, $password, $salt){
+	
+
+	/*public function checkCookie($userName, $password, $salt){
 		
 		$timeFile = file_get_contents("cookieTime.txt");
 			
@@ -235,8 +248,17 @@ class View{
 				}	
 			}
 			return false;
+	}*/
+	// no222bd - Rewitten ======================================================================
+	public function checkCookieTime() {
+		$filename = $this->getUsernameCookie() . '.txt';
+			
+		if(@file_get_contents($filename) == false)
+			return false;
+		else 
+			return time() < file_get_contents($filename);
 	}
-	
+
 	/**
 	 * Förstör kakorna.
 	 */
@@ -286,35 +308,51 @@ class View{
 			}
 		}
 	
-	// no222bd - Added link to register =======================================================================
+	
 	/**
 	 * Visar loginsidan.
 	 */
+	// no222bd - Added link to register, successmessage and username ===========================================
 	public function showLoginPage(){
-		
-          echo \view\SharedView::basicHeader() .
+			
+		$html = \view\SharedView::basicHeader() .
           "<h1>Laboration 4</h1><h2>Ej Inloggad</h2>
           <p><a href='?register'>Registrera</a></p>
 			<form action='?login' method='post' enctype='multipart/form-data'>
 				<fieldset>
-					<legend>Login - Skriv in användarnamn och lösenord</legend>
-					".$this->message."
-					<label for='UserNameID' >Användarnamn :</label>
-					<input type='text' size='20' name='".$this->userName."' id='".$this->userName."' value='".$this->getStripUserName()."' />
-					<label for='PasswordID' >Lösenord  :</label>
-					<input type='password' size='20' name='".$this->password."' id='".$this->password."' value='' />
-					<label for='AutologinID' >Håll mig inloggad  :</label>
-					<input type='checkbox' name='".$this->loginBox."' id='AutologinID' />
+					<legend>Login - Skriv in användarnamn och lösenord</legend>"
+					
+					. \view\SharedView::getSuccessMessage()
+
+					. $this->message .
+
+				   "<label>Användarnamn:
+						<input type='text' size='20' name='".$this->userName."' id='".$this->userName."' value='";
+
+		if(NULL !== $newUserName = \view\SharedView::getNewUserName())
+			$html .= $newUserName;
+		else
+			$html .= $this->getStripUserName();
+
+		$html .= "' /></label>
+					<label>Lösenord:
+						<input type='password' size='20' name='".$this->password."' id='".$this->password."' value='' />
+					</label>
+					<label>Håll mig inloggad:
+						<input type='checkbox' name='".$this->loginBox."' id='AutologinID' />
+					</label>
 					<input type='submit' name='".$this->loginButton."'  value='Logga in' />
 				</fieldset>
 			</form>"
 			 . \view\SharedView::basicFooter(); 
+	
+		echo $html;
 	}
 	
-	// no222bd - Added argument to method for dynamic username ===============================================
 	/**
 	 * Visar förstasidan när man är inloggad.
 	 */
+	// no222bd - Added argument to method for dynamic username ===============================================
 	public function showHomePage($username){
 		
 		echo \view\SharedView::basicHeader() .   

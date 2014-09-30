@@ -2,12 +2,10 @@
 
 namespace view;
 
-//require_once('/view/MasterView.php');
+require_once('view/SharedView.php');
 
 class RegisterView {
 	
-	//private $masterView;
-
 	private $username = 'username';
 	private $password = 'password';
 	private $repeatedPassword = 'repeatedPassword';
@@ -15,35 +13,28 @@ class RegisterView {
 
 	private $registrationErrorMessage = array();
 
-
-	//public function __construct() {
-	//	$this->masterView = new \view\MasterView();
-	//}
-
 	public function doRegister(){
 		return isset($_POST[$this->registerButton]);
 	}
 
 	public function getUsername(){
-		//if(isset($_POST[$this->username])){
-			return $_POST[$this->username];
-		//}
+		return $_POST[$this->username];
 	}
 
 	public function getPassword(){
-		//if(isset($_POST[$this->password])){
-			return $_POST[$this->password];
-		//}
+		return $_POST[$this->password];
 	}
 
 	public function getRepeatedPassword(){
-		//if(isset($_POST[$this->repeatedPassword])){
-			return $_POST[$this->repeatedPassword];
-		//}
+		return $_POST[$this->repeatedPassword];
 	}
 
 	public function setRegistrationErrorMessage($errorMessage) {
 		$this->registrationErrorMessage[] = $errorMessage;
+	}
+
+	public function getLoginPage() {
+		header('Location: ' . $_SERVER['PHP_SELF']);
 	}
 
 	public function getRegisterHTML() {
@@ -56,7 +47,7 @@ class RegisterView {
 			<p>
 				<a href="?">Tillbaka</a>
 			</p>
-			<form action="' . $_SERVER['PHP_SELF'] . '?register' . '" method="post">
+			<form action="' . $_SERVER['PHP_SELF'] . '?' . \view\SharedView::$registerURL . '" method="post">
 				<fieldset>
 					<legend>Registrera ny användare</legend>';
 		
@@ -68,7 +59,7 @@ class RegisterView {
 					 	<input type="text" name="' . $this->username . '"';
 
 		if(isset($_POST[$this->username]))
-			$output .= ' value="' . $_POST[$this->username] . '"';
+			$output .= ' value="' . strip_tags($_POST[$this->username]) . '"';
 
 		$output .= '/>
 					</label><br/>
