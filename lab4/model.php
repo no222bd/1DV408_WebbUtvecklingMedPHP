@@ -2,16 +2,16 @@
     
 namespace model;
 
-// no222bd - Added UserListModel and UserModel ===========================================
+// ========== no222bd - Added UserListModel and UserModel ==========
 require_once('model/UserListModel.php');
 require_once('model/UserModel.php');
 
 class Model{
 
-	// no222bd - Saved name location in $_SESSION =========================================
+	// ========== no222bd - Saved name location in $_SESSION ==========
 	private $currentUser = 'currentUser';
 	
-	// no222bd - Deleted code =============================================================
+	// ========== no222bd - Deleted code ==========
 	/*/**
 	* @var string
 	*/
@@ -80,12 +80,12 @@ class Model{
 	*/
 	private $cookiePass = "segopunsefgipuwegi";
 	
-	// no222bd - Get username from $_SESSION ==============================================
+	// ========== no222bd - Get username from $_SESSION ==========
 	public function getCurrentUsername() {
 		return $_SESSION[$this->currentUser];
 	}
 
-	// no222bd - Check if user entered valid credentials ==================================
+	// ========== no222bd - Check if user entered valid credentials ==========
 	public function checkCredentials($username, $password) {
 		$userList = (new \model\UserListModel())->getUserList();
 		$user = new \model\UserModel($username, $password, false);
@@ -93,26 +93,12 @@ class Model{
 		foreach($userList as $existingUser) {
 			if($user->equals($existingUser)) {
 				$_SESSION[$this->currentUser] = $username;
-				//var_dump($_SESSION);die();
 				return true;
 			}
 		}
 
 		return false;
 	}
-	/*public function checkCredentials($username, $password) {
-		$userList = (new \model\UserListModel())->getUserList();
-		$user = new \model\UserModel($username, $password, false);
-
-		foreach($userList as $existingUser) {
-			if($user->hasSameUsername($existingUser)) {
-				$_SESSION[$this->currentUser] = $username;
-				return true;
-			}
-		}
-
-		return false;
-	}*/
 
 	/**
 	 * startar sessionen för inloggning.

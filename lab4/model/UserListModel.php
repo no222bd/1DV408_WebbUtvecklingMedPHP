@@ -4,7 +4,7 @@ namespace model;
 
 class UserListModel {
 
-	// Array containing User objects
+	// Array containing registered users
 	private $userList = array();
 	
 	// DB settings
@@ -30,7 +30,7 @@ class UserListModel {
 		}
 	}
 
-	// Fill the private member userList with User objects from DB
+	// Fill the userList with User objects from DB
 	private function fillUserList() {
 		
 		$connection = $this->connectToDB();
@@ -46,7 +46,7 @@ class UserListModel {
 		}
 	}
 
-	// Save a User object to DB
+	// Save a new user to DB
 	public function saveUser(\model\UserModel $user) {
 		
 		$connection = $this->connectToDB();

@@ -4,7 +4,6 @@ namespace controller;
 
 require_once('model/RegisterModel.php');
 require_once('view/RegisterView.php');
-
 require_once('TooShortCredentialsException.php');
 
 class RegisterController {
@@ -22,9 +21,12 @@ class RegisterController {
 		// If user has pressed the Register-button
 		if($this->registerView->doRegister()) {
 			
-			// Get user input from the view and send it to the model
+			// Get user input from the view and send it to the registerModel
 			try {
-				if($this->registerModel->createUser($this->registerView->getUsername(), $this->registerView->getPassword(), $this->registerView->getRepeatedPassword())) {
+				if($this->registerModel->createUser($this->registerView->getUsername(),
+													$this->registerView->getPassword(),
+													$this->registerView->getRepeatedPassword())) {
+
 					\view\SharedView::saveNewUserName($this->registerView->getUsername());
 					\view\SharedView::activateSuccessMessage();
 

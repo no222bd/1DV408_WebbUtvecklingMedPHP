@@ -2,11 +2,11 @@
     
 namespace controller;
 
-// no222bd - Added TextScrambler ==================================================================
-require_once('model/TextScramblerModel.php');
-
 require_once 'view.php';
 require_once 'model.php';
+
+// ========== no222bd - Added TextScrambler ==========
+require_once('model/TextScramblerModel.php');
 
 class Controller{
 	
@@ -59,20 +59,16 @@ class Controller{
 	 * Kontrollerar ifall kakorna är giltiga
 	 * och om de är det startas sessionen.
 	 */
-	// no222bd - Rewritten checkCookie function and added checkCredentials function ==============================
 	private function checkCookie(){
 
 		if($this->classView->cookieExist()){
 
-
-			//var_dump($this->classView->checkCookieTime());
-			//(var_dump($this->classModel->checkCredentials($this->classView->getUsernameCookie(), \model\TextScramblerModel::decrypt($this->classView->getPasswordCookie()))); die();
-
+			// ========== no222bd - Rewritten code ==========
 			if($this->classView->checkCookieTime()
 			   && $this->classModel->checkCredentials($this->classView->getUsernameCookie(), 
 												      \model\TextScramblerModel::decrypt($this->classView->getPasswordCookie()))) {
-
-			// Old code -- if(!$this->classView->checkCookie($this->classModel->getAdmin(), $this->classModel->getCookiePass(), $this->classModel->getSalt())){
+			
+			//if(!$this->classView->checkCookie($this->classModel->getAdmin(), $this->classModel->getCookiePass(), $this->classModel->getSalt())){
 
 				$this->classModel->startSession();
 				$this->classView->setMessage(\view\View::COOKIE);
@@ -82,25 +78,7 @@ class Controller{
 			}
 		}
 	}
-	/*private function checkCookie(){
-
-		if($this->classView->cookieExist()){
-
-			if($this->classView->checkCookieTime()
-			   && $this->classModel->checkCredentials($this->classView->getUsernameCookie(), 
-												      \model\TextScramblerModel::decrypt($this->classView->getPasswordCookie()))) {
-			
-			// Old code -- if(!$this->classView->checkCookie($this->classModel->getAdmin(), $this->classModel->getCookiePass(), $this->classModel->getSalt())){
-
-				$this->classView->destroyCookie();
-				$this->classView->setMessage(\view\View::WRONG_COOKIE);
-			}
-			else{
-				$this->classModel->startSession();
-				$this->classView->setMessage(\view\View::COOKIE);
-			}
-		}
-	}*/
+	
 	/**
 	 * Utförs när användaren försöker logga ut.
 	 * Avslutar kakorna och sessionen.
@@ -121,8 +99,6 @@ class Controller{
 	 * Utförs när användaren försöker logga in.
 	 * Skapar session och kakor om användaren valt detta.
 	 */
-	// no222bd - Rewritten the call to bakeCookies() so that Username and password 
-	//		     comes from $_POST instead of from hardcoded values
 	private function tryToLogin(){
 		
 		if($this->classView->tryToLogin()){
@@ -133,10 +109,9 @@ class Controller{
 					$this->classView->setMessage(\view\View::LOGGED_IN_AND_REMEMBER_YOU);
 					
 					if(!$this->classView->cookieExist()) {
+						// ========== no222bd - Rewritten code ==========
 						$this->classView->bakeCookie($this->classView->getUserName(),
 													 \model\TextScramblerModel::encrypt($this->classView->getPassword()));
-
-						// Old invocation of bakeCookie
 						//$this->classView->bakeCookie($this->classModel->getAdmin(), $this->classModel->getCookiePass(), $this->classModel->getSalt());
 					}
 					$this->classModel->startSession();
@@ -153,17 +128,10 @@ class Controller{
 	 * @return bool
 	 * Kontrollerar vad användaren matat in.
 	 */
-	// no222bd - Deleted and Rewritten code ==================================================================
+	// ========== no222bd - Deleted and Rewritten code ==========
 	private function checkUserInput(){
-		/*if($this->checkUserName() && $this->checkPassword()){
-			return true;
-		}
-		return false;*/
 
 		if($this->checkUserName() && $this->checkPassword()){
-
-			//echo "hej"; die();
-
 
 			if($this->classModel->checkCredentials($this->classView->getUserName(), $this->classView->getPassword())) {
 		 		return true;
@@ -190,7 +158,7 @@ class Controller{
 			return false;
 		}
 
-		// no222bd - Deleted code ============================================================
+		// ========== no222bd - Deleted code ==========
 		/*if($this->classView->getStripUserName() == $this->classModel->getAdmin()){
 			return true;
 		} else {
@@ -217,7 +185,7 @@ class Controller{
 			return false;
 		}
 
-		// no222bd - Deleted code ===========================================================
+		// ========== no222bd - Deleted code ==========
 		/*if($this->classView->getStripPassword() == $this->classModel->getPassword()){
 			return true;
 		}

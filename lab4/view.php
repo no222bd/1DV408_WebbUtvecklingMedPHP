@@ -88,12 +88,12 @@ class View{
 	 */
 	private $cookiePass = "cookiePass";
 	
-	// no222bd - Added funtions to retrieve username cookie =====================================
+	// ========== no222bd - Added funtions to retrieve cookie usernamevalue ==========
 	public function getUsernameCookie() {
 		return $_COOKIE[$this->cookieName];
 	}
 
-	// no222bd - Added funtions to retrieve password cookie =====================================
+	// ========== no222bd - Added funtions to retrieve cookie passwordvalue ==========
 	public function getPasswordCookie() {
 		return $_COOKIE[$this->cookiePass];
 	}
@@ -182,10 +182,20 @@ class View{
 		return false;
 	}
 	
+	
+	// ========== no222bd - Rewritten - Simple and ugly fix to handle cookietime for each user  ==========
+	public function bakeCookie($username, $scrambledPassword){
+		
+		$filename = $username . '.txt';
+		
+		$time = time() + 60;
+				
+		file_put_contents($filename, $time);
+				
+		setcookie($this->cookieName, $username, $time);
+		setcookie($this->cookiePass, $scrambledPassword, $time);
+	}
 	/**
-	 * @param userName string
-	 * @param password string
-	 * @param salt string
 	 * Skapar kakorna med namn, value och krypterar lösen.
 	 * Skapar även en textfil med kakornas tid.
 	 */
@@ -201,18 +211,6 @@ class View{
 		setcookie($this->cookiePass, $cryptPass, $time);
 		
 	}*/
-	// no222bd - Rewritten - Simple and ugly fix to handle cookietime for each user  ================
-	public function bakeCookie($username, $scrambledPassword){
-		
-		$filename = $username . '.txt';
-		
-		$time = time() + 60;
-				
-		file_put_contents($filename, $time);
-				
-		setcookie($this->cookieName, $username, $time);
-		setcookie($this->cookiePass, $scrambledPassword, $time);
-	}
 	
 	/**
 	 * @return bool
@@ -225,16 +223,19 @@ class View{
 		return false;
 	}
 	
+	// ========== no222bd - Rewitten to check for cookietime only ==========
+	public function checkCookieTime() {
+		$filename = $this->getUsernameCookie() . '.txt';
+			
+		if(@file_get_contents($filename) == false)
+			return false;
+		else 
+			return time() < file_get_contents($filename);
+	}
 	/**
-	 * @param userName string
-	 * @param password string
-	 * @param salt
-	 * @return bool
 	 * Kontrollerar kakornas tid med textfilen.
 	 * Kontrollerar sedan om namn och lösen stämmer.
 	 */
-	
-
 	/*public function checkCookie($userName, $password, $salt){
 		
 		$timeFile = file_get_contents("cookieTime.txt");
@@ -249,15 +250,6 @@ class View{
 			}
 			return false;
 	}*/
-	// no222bd - Rewitten ======================================================================
-	public function checkCookieTime() {
-		$filename = $this->getUsernameCookie() . '.txt';
-			
-		if(@file_get_contents($filename) == false)
-			return false;
-		else 
-			return time() < file_get_contents($filename);
-	}
 
 	/**
 	 * Förstör kakorna.
@@ -308,11 +300,10 @@ class View{
 			}
 		}
 	
-	
 	/**
 	 * Visar loginsidan.
 	 */
-	// no222bd - Added link to register, successmessage and username ===========================================
+	// ========== no222bd - Added link to register. Successmessage and username ==========
 	public function showLoginPage(){
 			
 		$html = \view\SharedView::basicHeader() .
@@ -352,7 +343,7 @@ class View{
 	/**
 	 * Visar förstasidan när man är inloggad.
 	 */
-	// no222bd - Added argument to method for dynamic username ===============================================
+	// ========== no222bd - Added argument to method for dynamic username ==========
 	public function showHomePage($username){
 		
 		echo \view\SharedView::basicHeader() .   
