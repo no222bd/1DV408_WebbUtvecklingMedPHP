@@ -7,22 +7,26 @@ class UserModel {
 	private $username;
 	private $password;
 
+	private static $tooShortUsernameMessage = 'Användarnamnet har för få tecken. Minst 3 tecken';
+	private static $tooShortPasswordMessage = 'Lösenorden har för få tecken. Minst 6 tecken';
+	private static $invalidCharactersMessage = 'Användarnamnet innehåller ogiltiga tecken';
+
 	// Create user after validation
 	public function __construct($username, $password, $validate = true ) {
 
 		if($validate) {
 
 			if(mb_strlen($username) < 3 && mb_strlen($password) < 6)
-				throw new \TooShortCredentialsException();
+				throw new \TooShortCredentialsException(self::$tooShortUsernameMessage, self::$tooShortPasswordMessage);
 
 			if(mb_strlen($username) < 3)
-				throw new \Exception('Användarnamnet har för få tecken. Minst 3 tecken');
+				throw new \Exception(self::$tooShortUsernameMessage);
 
 			if(mb_strlen($username) !== mb_strlen(strip_tags($username)))
-				throw new \Exception('Användarnamnet innehåller ogiltiga tecken');
+				throw new \Exception(self::$invalidCharactersMessage);
 
 			if(mb_strlen($password) < 6)
-				throw new \Exception('Lösenorden har för få tecken. Minst 6 tecken');
+				throw new \Exception(self::$tooShortPasswordMessage);
 		}
 		
 		$this->username = $username;

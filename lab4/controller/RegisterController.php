@@ -33,8 +33,8 @@ class RegisterController {
 					$this->registerView->getLoginPage();
 				}
 			} catch(\TooShortCredentialsException $e) {
-				$this->registerView->setRegistrationErrorMessage('Användarnamnet har för få tecken. Minst 3 tecken');
-				$this->registerView->setRegistrationErrorMessage('Lösenorden har för få tecken. Minst 6 tecken');
+				foreach($e->getMessageArray() as $message)
+					$this->registerView->setRegistrationErrorMessage($message);
 			} catch (\Exception $e) {
 				$this->registerView->setRegistrationErrorMessage($e->getMessage());
 			}
