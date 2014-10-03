@@ -112,6 +112,7 @@ class Controller{
 						// ========== no222bd - Rewritten code ==========
 						$this->classView->bakeCookie($this->classView->getUserName(),
 													 \model\TextScramblerModel::encrypt($this->classView->getPassword()));
+						
 						//$this->classView->bakeCookie($this->classModel->getAdmin(), $this->classModel->getCookiePass(), $this->classModel->getSalt());
 					}
 					$this->classModel->startSession();

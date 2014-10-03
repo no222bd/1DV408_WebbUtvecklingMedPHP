@@ -87,6 +87,7 @@ class Model{
 
 	// ========== no222bd - Check if user entered valid credentials ==========
 	public function checkCredentials($username, $password) {
+
 		$userList = (new \model\UserListModel())->getUserList();
 		$user = new \model\UserModel($username, $password, false);
 

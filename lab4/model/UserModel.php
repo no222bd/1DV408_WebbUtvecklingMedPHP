@@ -7,6 +7,7 @@ class UserModel {
 	private $username;
 	private $password;
 
+	// Exception messages
 	private static $tooShortUsernameMessage = 'Användarnamnet har för få tecken. Minst 3 tecken';
 	private static $tooShortPasswordMessage = 'Lösenorden har för få tecken. Minst 6 tecken';
 	private static $invalidCharactersMessage = 'Användarnamnet innehåller ogiltiga tecken';
